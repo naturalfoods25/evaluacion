@@ -5,13 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Evaluaciones Trimestral</title>
   <style>
-    /* ————— Estilos generales y fondo ————— */
+    /* Estilos generales y fondo */
     body {
-      /*background-image: url('fondo-natural-foods.jpg');*/
-      background-repeat: no-repeat;
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
       background-color: #f2f2f2;
       font-family: Arial, sans-serif;
       margin: 0;
@@ -20,12 +15,12 @@
       text-align: center;
     }
 
-    /* ————— Menú horizontal de botones ————— */
+    /* Menú de botones en horizontal */
     .menu {
-      display: flex;              
-      flex-wrap: wrap;            
-      justify-content: center;    
-      gap: 12px 16px;             
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px 16px;
       background: rgba(255,255,255,0.9);
       border-radius: 10px;
       padding: 20px;
@@ -33,21 +28,18 @@
       margin: 0 auto 20px;
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
-
     .menu img {
       max-width: 180px;
       margin-bottom: 10px;
-      flex-basis: 100%;           
+      flex-basis: 100%;
     }
-
     .menu h1 {
-      flex-basis: 100%;           
+      flex-basis: 100%;
       margin: 10px 0 20px;
       font-size: 1.6rem;
     }
-
     .menu a {
-      display: inline-block;      
+      display: inline-block;
       padding: 12px 18px;
       background-color: #2f7833;
       color: #fff;
@@ -60,14 +52,12 @@
     .menu a:hover {
       background-color: #225e29;
     }
-
-    /* Estilo del botón activo */
     .menu a.active {
       background-color: #19461c;
       box-shadow: 0 2px 6px rgba(0,0,0,0.4);
     }
 
-    /* ————— Contenedor del iframe ————— */
+    /* Contenedor de carga del formulario */
     .form-container {
       max-width: 900px;
       height: 80vh;
@@ -77,13 +67,16 @@
       overflow: hidden;
       box-shadow: 0 0 15px rgba(0,0,0,0.2);
     }
-    .form-container iframe {
+
+    /* El <object> ocupa todo el contenedor */
+    .form-container object,
+    .form-container embed {
       width: 100%;
       height: 100%;
       border: none;
     }
 
-    /* ————— Responsive: en móviles estrechos apilar verticalmente ————— */
+    /* Apilar en móvil muy estrecho */
     @media (max-width: 480px) {
       .menu {
         flex-direction: column;
@@ -98,7 +91,7 @@
 </head>
 
 <body>
-  <!-- ————— Menú de botones horizontal ————— -->
+  <!-- Menú de botones -->
   <div class="menu">
     <img src="logo_natural_foods.jpg" style="max-width: 100% !important;" alt="Natural Foods Logo" />
 
@@ -125,31 +118,38 @@
     <a href="#"
        data-src="https://forms.office.com/r/BVgb6ZpNae"
        class="btn-load">
-      🧑‍💼 GERENTES ENTRE GERENTES Y DE DIRECTORES A GERENTES
+      🧑‍💼 ENTRE GERENTES Y DE DIRECTORES A GERENTES
     </a>
   </div>
 
-  <!-- ————— Aquí aparecerá el formulario cargado ————— -->
+  <!-- Contenedor donde cargamos el formulario -->
   <div class="form-container">
-    <iframe id="formFrame" src="" allow="geolocation; microphone; camera"></iframe>
+    <!-- Usamos object en lugar de iframe -->
+    <object id="formLoader" type="text/html" data="">
+      <!-- Fallback a embed por si object falla -->
+      <embed id="formEmbed" type="text/html" src="" />
+    </object>
   </div>
 
   <script>
     const botones = document.querySelectorAll('.btn-load');
-    const iframe  = document.getElementById('formFrame');
+    const obj     = document.getElementById('formLoader');
+    const embed   = document.getElementById('formEmbed');
 
     botones.forEach(btn => {
-      btn.addEventListener('click', evt => {
-        evt.preventDefault();
-        // 1) Cargar formulario en el iframe
-        iframe.src = btn.getAttribute('data-src');
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        // 1) Obtener URL y cargar en object (o embed)
+        const url = btn.getAttribute('data-src');
+        obj.setAttribute('data', url);
+        embed.setAttribute('src', url);
         // 2) Resaltar botón activo
-        botones.forEach(b => b.classList.remove('active'));
+        botones.forEach(x => x.classList.remove('active'));
         btn.classList.add('active');
       });
     });
 
-    // Al cargar la página, simular clic en el primer botón
+    // Auto-clic al primer botón
     window.addEventListener('DOMContentLoaded', () => {
       if (botones.length) botones[0].click();
     });
